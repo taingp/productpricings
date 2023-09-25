@@ -49,4 +49,23 @@ public class ProductRepo
         var entity = store.FirstOrDefault(x => x.Id == key || x.Code.ToLower()==key.ToLower());
         return entity?.ToResponse();
     }
+
+    public bool Exist(string key)
+    {
+        return store.Exists(x => x.Id == key || x.Code.ToLower() == key.ToLower());
+    }
+
+    public bool Update(ProductUpdateReq req)
+    {
+        var found = store.FirstOrDefault(x => (x.Id == req.Key) || (x.Code.ToLower() == req.Key.ToLower()));
+        if (found == null) return false;
+        found.Copy(req);
+        return true;
+    }
+    public bool Delete(string key)
+    {
+        var found = store.FirstOrDefault(x => (x.Id == key) || (x.Code.ToLower() == key.ToLower()));
+        if (found == null) return false;
+        return store.Remove(found);
+    }
 }

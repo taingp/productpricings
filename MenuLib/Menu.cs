@@ -1,4 +1,4 @@
-﻿namespace MenuLibrary;
+﻿namespace MenuLib;
 public class Menu
 {
     public string Text { get; set; } = "";
