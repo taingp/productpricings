@@ -4,21 +4,21 @@ public class MenuBank
     public string Title { get; set; } = "";
     public string ChosenText { get; set; } = "Index";
     public string LeadingText { get; set; } = "  ";
-    public List<Menu> Menues { get; set; } = new();
+    public List<Menu> Menus { get; set; } = new();
 
     public void Show()
     {
         Console.WriteLine($"[{Title} menu]");
-        for(int k=0; k<Menues.Count; k++)
+        for(int k=0; k<Menus.Count; k++)
         {
-            var menu = Menues[k];
+            var menu = Menus[k];
             Console.WriteLine($"{k + 1,3}-{menu.Text}");
         }
     }
     public Menu GetMenu()
     {
-        int input = Input(1, Menues.Count, ChosenText, LeadingText);
-        return Menues[input - 1];
+        int input = Input(1, Menus.Count, ChosenText, LeadingText);
+        return Menus[input - 1];
     }
 
     public void MenuSimulate(Action? leadingAction=null)

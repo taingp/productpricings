@@ -9,7 +9,7 @@ public static class ProductHelper
     public static MenuBank MenuBank { get; set; } = new MenuBank()
     {
         Title = "People",
-        Menues = new List<Menu>()
+        Menus = new List<Menu>()
         {
             new Menu(){ Text= "Viewing", Action=ViewingProducts},
             new Menu(){ Text= "Creating", Action=CreatingProducts},
