@@ -8,7 +8,7 @@ public static class ProductHelper
     private static ProductRepo repo = new ProductRepo();
     public static MenuBank MenuBank { get; set; } = new MenuBank()
     {
-        Title = "People",
+        Title = "Product",
         Menus = new List<Menu>()
         {
             new Menu(){ Text= "Viewing", Action=ViewingProducts},
@@ -102,7 +102,7 @@ public static class ProductHelper
     }
     private static void CreatingProducts()
     {
-        Console.WriteLine("\n[Creating People]");
+        Console.WriteLine("\n[Creating Product]");
         while (true)
         {
             var req= GetCreateProduct();
