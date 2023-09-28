@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MenuLib\MenuLib.csproj" />
     <ProjectReference Include="..\productlib\ProductLib.csproj" />
   </ItemGroup>
 
