@@ -32,13 +32,33 @@ namespace ProductLib.Extensions
                 LastUpdatedOn = null
             };
         }
-
         public static void Copy(this Product prd, ProductUpdateReq req)
         {
             var category = Category.None;
-            Category.TryParse(req.Category,out category);
+            Category.TryParse(req.Category, out category);
             prd.Name = req.Name;
             prd.Category = category;
+        }
+        public static Product Clone(this Product prd)
+        {
+            return new Product()
+            {
+                Id = prd.Id,
+                Code = prd.Code,
+                Name = prd.Name,
+                Category = prd.Category,
+                CreatedOn = prd.CreatedOn,
+                LastUpdatedOn = prd.LastUpdatedOn,
+            };
+        }
+        public static void Copy(this Product prd, Product other)
+        {
+            prd.Id = other.Id;
+            prd.Code = other.Code;
+            prd.Name = other.Name;
+            prd.Category = other.Category;
+            prd.CreatedOn = other.CreatedOn;
+            prd.LastUpdatedOn = other.LastUpdatedOn;
         }
     }
 }

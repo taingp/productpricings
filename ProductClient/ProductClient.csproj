@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MenuLib\MenuLib.csproj" />
+    <PackageReference Include="MenuLib" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\productlib\ProductLib.csproj" />
   </ItemGroup>
 

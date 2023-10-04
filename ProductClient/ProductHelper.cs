@@ -5,7 +5,6 @@ using ProductLib;
 namespace ProductClient;
 public static class ProductHelper
 {
-    private static ProductRepo repo = new ProductRepo();
     public static MenuBank MenuBank { get; set; } = new MenuBank()
     {
         Title = "Product",
@@ -20,38 +19,38 @@ public static class ProductHelper
     };
     static ProductHelper()
     {
-        repo.Initialize();
+        (new ProductService()).Initialize();
     }
     public static void ExitingProgram()
-        {
-            Console.WriteLine("\n[Exiting Program]");
-            Environment.Exit(0);
-        }
+    {
+        Console.WriteLine("\n[Exiting Program]");
+        Environment.Exit(0);
+    }
 
     private static void DeletingProducts()
+    {
+        Console.WriteLine("\n[Deleting Product]");
+        while (true)
         {
-            Console.WriteLine("\n[Deleting Product]");
-            while (true)
+            Console.Write("Product Id/Code: ");
+            var key = Console.ReadLine() ?? "";
+            var result = (new ProductService()).Delete(key);
+            if (result == true)
             {
-                Console.Write("Product Id/Code: ");
-                var key = Console.ReadLine()??"";
-                var result = repo.Delete(key);
-                if (result ==true)
-                {
-                    Console.WriteLine($"Successfully delete the product with id/code, {key}");
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to delete a product with id/code, {key}");
-                }
+                Console.WriteLine($"Successfully delete the product with id/code, {key}");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to delete a product with id/code, {key}");
+            }
 
-                if (WaitForEscPressed("ESC to stop or any key for more deleting ..."))
-                {
-                    break;
-                }
+            if (WaitForEscPressed("ESC to stop or any key for more deleting ..."))
+            {
+                break;
             }
         }
-    
+    }
+
     private static void UpdatingProducts()
     {
         Console.WriteLine("\n[Updating Products]");
@@ -59,7 +58,7 @@ public static class ProductHelper
         {
             Console.Write("Product Id/Code(required): ");
             var key = Console.ReadLine() ?? "";
-            if (!repo.Exist(key))
+            if (!(new ProductService()).Exist(key))
             {
                 Console.WriteLine($"No product with the id/code, {key}");
             }
@@ -72,7 +71,7 @@ public static class ProductHelper
                 Console.Write("New Category: ");
                 var category = Console.ReadLine();
 
-                var result = repo.Update(new ProductUpdateReq()
+                var result = (new ProductService()).Update(new ProductUpdateReq()
                 {
                     Key = key,
                     Name = name,
@@ -94,8 +93,8 @@ public static class ProductHelper
     }
 
     private static bool WaitForEscPressed(string text)
-    { 
-        Console.Write(text);;
+    {
+        Console.Write(text); ;
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         Console.WriteLine(keyInfo.KeyChar);
         return keyInfo.Key == ConsoleKey.Escape;
@@ -105,10 +104,10 @@ public static class ProductHelper
         Console.WriteLine("\n[Creating Product]");
         while (true)
         {
-            var req= GetCreateProduct();
+            var req = GetCreateProduct();
             if (req != null)
             {
-                var id = repo.Create(req);
+                var id = (new ProductService()).Create(req);
                 if (!string.IsNullOrEmpty(id))
                     Console.WriteLine($"Successfully created a new product with id, {id}");
                 else
@@ -133,25 +132,23 @@ public static class ProductHelper
         var code = dataParts[0].Trim();
         var name = dataParts[1].Trim();
         var category = dataParts[2].Trim();
-       
+
         return new ProductCreateReq() { Code = code, Name = name, Category = category };
 
     }
     private static void ViewingProducts()
     {
         Console.WriteLine("\n[Viewing Products]");
-        var all = repo.ReadAll();
+        var all = (new ProductService()).ReadAll();
         var count = all.Count;
         Console.WriteLine($"Products: {count}");
         if (count == 0) return;
 
-        Console.WriteLine($"{"Id",-36} {"Code", -10} {"Name",-30} {"Category",-20}");
-        Console.WriteLine(new string('=', 36 + 1 + 10 + 1 + 30 + 1  + 20));
+        Console.WriteLine($"{"Id",-36} {"Code",-10} {"Name",-30} {"Category",-20}");
+        Console.WriteLine(new string('=', 36 + 1 + 10 + 1 + 30 + 1 + 20));
         foreach (var prd in all)
         {
-            Console.WriteLine($"{prd.Id,-36} {prd.Code, -10} {prd.Name,-30} {prd.Category,-20}");
+            Console.WriteLine($"{prd.Id,-36} {prd.Code,-10} {prd.Name,-30} {prd.Category,-20}");
         }
     }
-
-
 }

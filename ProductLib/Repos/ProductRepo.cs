@@ -1,71 +1,28 @@
 using ProductLib.Extensions;
 
 namespace ProductLib;
-public class ProductRepo 
+public class ProductRepo
 {
-    private List<Product> store = new();
-    private bool isInit =false;
+    private static List<Product> store = new();
 
-    public List<string?> Initialize()
+    public void Create(Product entity)
     {
-        if (isInit) return new();
-        isInit = !isInit;
-        var reqs = new List<ProductCreateReq>()
-        {
-            new()
-            {
-                Code = "PRD001",
-                Name = "Coca",
-                Category= "Food"
-            },
-            new()
-            {
-                Code = "PRD002",
-                Name = "Dream 125",
-                Category= "Vehicle"
-            },
-            new()
-            {
-                Code = "PRD003",
-                Name = "TShirt-SEA game 2023",
-                Category= "Cloth"
-            }
-        };
-        return reqs.Select(x => Create(x)).ToList();
+        store.Add(entity.Clone());
     }
-    public string? Create(ProductCreateReq req)
+    public IQueryable<Product> GetQueryable()
     {
-        Product entity = req.ToEntity();
-        store.Add(entity);
-        return entity.Id;
-    }
-    
-    public List<ProductResponse> ReadAll()
-    {
-        return store.Select(x => x.ToResponse()).ToList();
-    }
-    public ProductResponse? Read(string key)
-    {
-        var entity = store.FirstOrDefault(x => x.Id == key || x.Code.ToLower()==key.ToLower());
-        return entity?.ToResponse();
+        return store.AsQueryable();
     }
 
-    public bool Exist(string key)
+    public bool Update(Product entity)
     {
-        return store.Exists(x => x.Id == key || x.Code.ToLower() == key.ToLower());
+        var found = GetQueryable().FirstOrDefault(x => x.Id == entity.Id);
+        if (found != null) found.Copy(entity);
+        return found != null;
     }
-
-    public bool Update(ProductUpdateReq req)
+    public bool Delete(string id)
     {
-        var found = store.FirstOrDefault(x => (x.Id == req.Key) || (x.Code.ToLower() == req.Key.ToLower()));
-        if (found == null) return false;
-        found.Copy(req);
-        return true;
-    }
-    public bool Delete(string key)
-    {
-        var found = store.FirstOrDefault(x => (x.Id == key) || (x.Code.ToLower() == key.ToLower()));
-        if (found == null) return false;
-        return store.Remove(found);
+        var found = store.FirstOrDefault(x => x.Id == id);
+        return found == null ? false : store.Remove(found);
     }
 }
