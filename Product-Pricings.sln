@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductLib", "productlib\Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductClient", "productclient\ProductClient.csproj", "{619C1DED-0B1E-4CE5-89A0-6391B2E535B8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductApi", "productapi\ProductApi.csproj", "{C18C810F-AB99-41FE-BDDB-28060DE45937}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{619C1DED-0B1E-4CE5-89A0-6391B2E535B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{619C1DED-0B1E-4CE5-89A0-6391B2E535B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{619C1DED-0B1E-4CE5-89A0-6391B2E535B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18C810F-AB99-41FE-BDDB-28060DE45937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18C810F-AB99-41FE-BDDB-28060DE45937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18C810F-AB99-41FE-BDDB-28060DE45937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18C810F-AB99-41FE-BDDB-28060DE45937}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
