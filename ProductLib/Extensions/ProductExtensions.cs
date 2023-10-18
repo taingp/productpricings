@@ -35,7 +35,7 @@ namespace ProductLib.Extensions
         public static void Copy(this Product prd, ProductUpdateReq req)
         {
             var category = Category.None;
-            Category.TryParse(req.Category, out category);
+            Category.TryParse(req.Category,out category);
             prd.Name = req.Name;
             prd.Category = category;
         }

@@ -1,10 +1,10 @@
 using ProductLib.Extensions;
 
 namespace ProductLib;
-public class ProductRepo
+public class ProductRepo 
 {
     private static List<Product> store = new();
-
+   
     public void Create(Product entity)
     {
         store.Add(entity.Clone());
@@ -13,7 +13,7 @@ public class ProductRepo
     {
         return store.AsQueryable();
     }
-
+  
     public bool Update(Product entity)
     {
         var found = GetQueryable().FirstOrDefault(x => x.Id == entity.Id);
@@ -23,6 +23,6 @@ public class ProductRepo
     public bool Delete(string id)
     {
         var found = store.FirstOrDefault(x => x.Id == id);
-        return found == null ? false : store.Remove(found);
+        return found==null? false : store.Remove(found);
     }
 }

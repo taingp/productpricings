@@ -6,7 +6,7 @@ public class ProductService
     private ProductRepo _repo = new();
     private bool isInit = false;
 
-    public List<string?> Initialize()
+    public Result<List<string?>> Initialize()
     {
         if (isInit) return new();
         isInit = !isInit;
@@ -31,43 +31,50 @@ public class ProductService
                 Category= "Cloth"
             }
         };
-        return reqs.Select(x => Create(x)).ToList();
+        var result = reqs.Select(x => Create(x).Data).ToList();
+        return Result<List<string?>>.Success(result);
     }
 
-    public bool Exist(string key)
+    public Result<bool> Exist(string key)
     {
-        return _repo.GetQueryable().Any(x => x.Id == key || x.Code.ToLower() == key.ToLower());
+        var result = _repo.GetQueryable().Any(x => x.Id == key || x.Code.ToLower() == key.ToLower());
+        return Result<bool>.Success(result);
     }
-    public string? Create(ProductCreateReq req)
+    public Result<string?> Create(ProductCreateReq req)
     {
-        if (Exist(req.Code)) return null;
+        if (Exist(req.Code).Data == true) return Result<string?>.Fail($"The product with the code, {req.Code}, does already exist");
         Product entity = req.ToEntity();
         _repo.Create(entity);
-        return entity.Id;
+        return Result<string?>.Success(entity.Id, "Successfully created");
     }
     
-    public List<ProductResponse> ReadAll()
+    public Result<List<ProductResponse>> ReadAll()
     {
-        return _repo.GetQueryable().Select(x => x.ToResponse()).ToList();
+        var result= _repo.GetQueryable().Select(x => x.ToResponse()).ToList();
+        return Result<List<ProductResponse>>.Success(result);
     }
-    public ProductResponse? Read(string key)
+    public Result<ProductResponse?> Read(string key)
     {
         var entity = _repo.GetQueryable().FirstOrDefault(x => x.Id == key || x.Code.ToLower()==key.ToLower());
-        return entity?.ToResponse();
+        return Result<ProductResponse?>.Success(entity?.ToResponse());
     }
 
-    public bool Update(ProductUpdateReq req)
+    public Result<string?> Update(ProductUpdateReq req)
     {
         var found = _repo.GetQueryable().FirstOrDefault(x => (x.Id == req.Key) || (x.Code.ToLower() == req.Key.ToLower()));
-        if (found == null) return false;
+        if (found == null) return Result<string?>.Fail($"No product with id/code, {req.Key}");
         var entity = found.Clone();
         entity.Copy(req);
-        return _repo.Update(entity);
+        var result= _repo.Update(entity);
+        return result == true ? Result<string?>.Success(entity.Id, "Successfully updated")
+                : Result<string?>.Fail($"Failed to update product with id/code, {req.Key}");
     }
-    public bool Delete(string key)
+    public Result<string?> Delete(string key)
     {
         var found = _repo.GetQueryable().FirstOrDefault(x => (x.Id == key) || (x.Code.ToLower() == key.ToLower()));
-        if (found == null) return false;
-        return _repo.Delete(found.Id);
+        if (found == null) return Result<string?>.Fail($"No product with id/code, {key}");
+        var result= _repo.Delete(found.Id);
+        return result == true ? Result<string?>.Success(found.Id, "Successfully deleted")
+                : Result<string?>.Fail($"Failed to delete product with id/code, {key}");
     }
 }
