@@ -2,9 +2,17 @@
 
 public class InitService : IHostedService
 {
-    public  Task StartAsync(CancellationToken cancellationToken)
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    public InitService(IServiceScopeFactory serviceScopeFactory)
     {
-        new ProductService().Initialize();
+        _serviceScopeFactory = serviceScopeFactory;
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        var service = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<ProductService>();
+        service.Initialize();
         return Task.CompletedTask;
     }
 
