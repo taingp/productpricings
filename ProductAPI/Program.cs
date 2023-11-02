@@ -6,12 +6,10 @@ using ProductLib;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<IDbContext, MemoryDbContext>(optionBuilder
-    => { optionBuilder.UseInMemoryDatabase("ProductDb"); });
+builder.Services.AddDbContext<IDbContext, SqlDbContext>(optionBuilder
+    => { optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")); });
 builder.Services.AddTransient<ProductRepo>();
 builder.Services.AddTransient<ProductService>();
-
-builder.Services.AddTransient<IHostedService, InitService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
