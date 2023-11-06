@@ -3,6 +3,7 @@ using ProductLib.Extensions;
 
 namespace ProductLib;
 public class ProductRepo
+    :IRepo<Product>
 {
     private readonly IDbContext _context = default!;
     public ProductRepo(IDbContext context)

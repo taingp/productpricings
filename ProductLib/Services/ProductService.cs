@@ -2,37 +2,10 @@ using ProductLib.Extensions;
 
 namespace ProductLib;
 public class ProductService
+    :IProductService
 {
-    private readonly ProductRepo _repo = default!;
-    public ProductService(ProductRepo repo) { _repo = repo; }
-
-    public Result<List<string?>> Initialize()
-    {
-        if (_repo.DbContext.Products.Any()) return new();
-        var reqs = new List<ProductCreateReq>()
-        {
-            new()
-            {
-                Code = "PRD001",
-                Name = "Coca",
-                Category= "Food"
-            },
-            new()
-            {
-                Code = "PRD002",
-                Name = "Dream 125",
-                Category= "Vehicle"
-            },
-            new()
-            {
-                Code = "PRD003",
-                Name = "TShirt-SEA game 2023",
-                Category= "Cloth"
-            }
-        };
-        var result = reqs.Select(x => Create(x).Data).ToList();
-        return Result<List<string?>>.Success(result);
-    }
+    private readonly IRepo<Product> _repo = default!;
+    public ProductService(IRepo<Product> repo) { _repo = repo; }
 
     public Result<bool> Exist(string key)
     {
