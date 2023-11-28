@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using ProductLib.Extensions;
 
 namespace ProductLib;
@@ -5,8 +6,11 @@ public class ProductService
     :IProductService
 {
     private readonly IProductRepo _repo = default!;
+    private DateTime? _actingDate = DateTime.Now;
+    
     public ProductService(IProductRepo repo) { _repo = repo; }
 
+    public IProductService SetActingDate(DateTime? actingDate) { _actingDate = actingDate; return this; }
     public bool Exist(string key)
     {
         return _repo.GetQueryable().Any(x => x.Id == key || x.Code.ToLower() == key.ToLower());
@@ -30,6 +34,7 @@ public class ProductService
     public Result<List<ProductResponse>> ReadAll()
     {
         var result = _repo.GetQueryable()
+                          .Include(x=>x.Pricings!.Where(p=>p.EffectedFrom<= _actingDate))
                           .Select(x => x.ToResponse())
                           .ToList();
         return Result<List<ProductResponse>>.Success(result);
@@ -37,6 +42,7 @@ public class ProductService
     public Result<ProductResponse?> Read(string key)
     {
         var entity = _repo.GetQueryable()
+                          .Include(x => x.Pricings!.Where(p => p.EffectedFrom <= _actingDate))
                           .FirstOrDefault(x => x.Id == key || x.Code.ToLower() == key.ToLower());
         return Result<ProductResponse?>.Success(entity?.ToResponse());
     }

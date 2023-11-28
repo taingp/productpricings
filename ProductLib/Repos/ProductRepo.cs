@@ -15,7 +15,7 @@ public class ProductRepo
     {
         try
         {
-            _context.Products.Add(entity.Clone());
+            _context.Products.Add(entity);
             _context.SaveChanges();
         }
         catch (Exception ex)
