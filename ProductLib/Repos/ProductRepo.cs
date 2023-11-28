@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using ProductLib.Extensions;
+using System;
 
 namespace ProductLib;
 public class ProductRepo
+    :IProductRepo
 {
     private readonly IDbContext _context = default!;
     public ProductRepo(IDbContext context)
@@ -28,39 +30,27 @@ public class ProductRepo
 
     public bool Update(Product entity)
     {
-        var found = GetQueryable().FirstOrDefault(x => x.Id == entity.Id);
-        if (found != null)
+        try
         {
-            try
-            {
-                found.Copy(entity);
-                _context.Products.Update(found);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to update > {ex.Message}");
-            }
+            _context.Products.Update(entity);
+            return _context.SaveChanges()>0;
         }
-        return found != null;
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to update > {ex.Message}");
+        }
     }
-    public bool Delete(string id)
+    public bool Delete(Product entity)
     {
-        var found = GetQueryable().FirstOrDefault(x => x.Id == id);
-        if (found != null)
+        try
         {
-            try
-            {
-                _context.Products.Remove(found);
-                _context.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to delete > {ex.Message}");
-            }
+            _context.Products.Remove(entity);
+            return _context.SaveChanges()>0;
         }
-        return false;
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to delete > {ex.Message}");
+        }
     }
     public IDbContext DbContext => _context;
 }
