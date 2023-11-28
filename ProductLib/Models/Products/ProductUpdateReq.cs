@@ -1,9 +1,9 @@
 ﻿namespace ProductLib;
 
 public class ProductUpdateReq
-    :ProductBase
+    : ProductBase
     , IUpdateReq
 {
-    public string Key{ get; set; } = default!;
+    public string Key { get; set; } = default!;
     public string? Category { get; set; } = default;
 }

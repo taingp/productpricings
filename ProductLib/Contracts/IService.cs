@@ -9,7 +9,6 @@ public interface IService< TResponse, TCreateReq, TUpdateReq>
 {
     Result<string?> Create(TCreateReq req);
     Result<string?> Delete(string key);
-    Result<bool> Exist(string key);
     Result<TResponse?> Read(string key);
     Result<List<TResponse>> ReadAll();
     Result<string?> Update(TUpdateReq req);
