@@ -6,4 +6,5 @@ public class ProductResponse
     public string? Id { get; set; } = default;
     public string Code { get; set; } = default!;
     public string? Category { get; set; } = default;
+    public double? Price { get; set; } = default;
 }

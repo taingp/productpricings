@@ -12,8 +12,8 @@ using ProductApi;
 namespace ProductAPI.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20231102151024_InitProducts")]
-    partial class InitProducts
+    [Migration("20231128141819_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,34 @@ namespace ProductAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("ProductLib.Pricing", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EffectedFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastUpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Pricings");
+                });
 
             modelBuilder.Entity("ProductLib.Product", b =>
                 {
@@ -67,28 +95,44 @@ namespace ProductAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ca1c1ed8-b2d1-430b-a184-a61d13ac3b70",
+                            Id = "777ae460-4890-4d5c-a86f-0acb0c4c25bb",
                             Category = (byte)1,
                             Code = "PRD001",
-                            CreatedOn = new DateTime(2023, 11, 2, 22, 10, 24, 441, DateTimeKind.Local).AddTicks(3728),
+                            CreatedOn = new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5460),
                             Name = "Coca"
                         },
                         new
                         {
-                            Id = "32295a53-e8ae-4207-8e94-987c78d94da8",
+                            Id = "f420f3fe-95d8-48cf-9c6e-78c0d0249df3",
                             Category = (byte)32,
                             Code = "PRD002",
-                            CreatedOn = new DateTime(2023, 11, 2, 22, 10, 24, 441, DateTimeKind.Local).AddTicks(3746),
+                            CreatedOn = new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5482),
                             Name = "Dream 125"
                         },
                         new
                         {
-                            Id = "117721dd-75f1-4d90-9d2b-3e209c5e90d8",
+                            Id = "0ed9b79a-6323-454c-aa77-d5d972f542ea",
                             Category = (byte)4,
                             Code = "PRD003",
-                            CreatedOn = new DateTime(2023, 11, 2, 22, 10, 24, 441, DateTimeKind.Local).AddTicks(3750),
+                            CreatedOn = new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5489),
                             Name = "TShirt-SEA game 2023"
                         });
+                });
+
+            modelBuilder.Entity("ProductLib.Pricing", b =>
+                {
+                    b.HasOne("ProductLib.Product", "Product")
+                        .WithMany("Pricings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ProductLib.Product", b =>
+                {
+                    b.Navigation("Pricings");
                 });
 #pragma warning restore 612, 618
         }

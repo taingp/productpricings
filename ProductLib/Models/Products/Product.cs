@@ -8,4 +8,5 @@ public class Product
     public Category Category { get; set; } = Category.None;
     public DateTime? CreatedOn { get; set; } = default;
     public DateTime? LastUpdatedOn { get; set; } = default;
+    public List<Pricing>? Pricings { get; set; } = default;
 }

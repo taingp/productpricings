@@ -15,7 +15,8 @@ namespace ProductLib.Extensions
                 Id = prd.Id,
                 Code = prd.Code,
                 Name = prd.Name,
-                Category = Enum.GetName<Category>(prd.Category)
+                Category = Enum.GetName<Category>(prd.Category),
+                Price = prd.Pricings!.OrderBy(p=>p.EffectedFrom)?.LastOrDefault()?.Value
             };
         }
         public static Product ToEntity(this ProductCreateReq req)
@@ -38,27 +39,6 @@ namespace ProductLib.Extensions
             Category.TryParse(req.Category,out category);
             prd.Name = req.Name;
             prd.Category = category;
-        }
-        public static Product Clone(this Product prd)
-        {
-            return new Product()
-            {
-                Id = prd.Id,
-                Code = prd.Code,
-                Name = prd.Name,
-                Category = prd.Category,
-                CreatedOn = prd.CreatedOn,
-                LastUpdatedOn = prd.LastUpdatedOn,
-            };
-        }
-        public static void Copy(this Product prd, Product other)
-        {
-            prd.Id = other.Id;
-            prd.Code = other.Code;
-            prd.Name = other.Name;
-            prd.Category = other.Category;
-            prd.CreatedOn = other.CreatedOn;
-            prd.LastUpdatedOn = other.LastUpdatedOn;
         }
     }
 }
