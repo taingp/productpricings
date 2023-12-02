@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace ProductLib
 {
     public interface IDbContext
     {
-        DbSet<Product> Products { get; set; }
-        DbSet<Pricing> Pricings { get; set; }
         int SaveChanges();
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 }

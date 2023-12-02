@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProductAPI.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,7 +26,7 @@ namespace ProductAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pricings",
+                name: "Pricing",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -38,9 +38,9 @@ namespace ProductAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pricings", x => x.Id);
+                    table.PrimaryKey("PK_Pricing", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pricings_Products_ProductId",
+                        name: "FK_Pricing_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -50,21 +50,21 @@ namespace ProductAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "Category", "Code", "CreatedOn", "LastUpdatedOn", "Name" },
-                values: new object[] { "0ed9b79a-6323-454c-aa77-d5d972f542ea", (byte)4, "PRD003", new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5489), null, "TShirt-SEA game 2023" });
+                values: new object[] { "48304f9d-31f1-42de-a995-8c221e23e19f", (byte)1, "PRD001", new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9389), null, "Coca" });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "Category", "Code", "CreatedOn", "LastUpdatedOn", "Name" },
-                values: new object[] { "777ae460-4890-4d5c-a86f-0acb0c4c25bb", (byte)1, "PRD001", new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5460), null, "Coca" });
+                values: new object[] { "4e6a9f5c-5993-4886-9954-b957ecc0a420", (byte)4, "PRD003", new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9531), null, "TShirt-SEA game 2023" });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "Category", "Code", "CreatedOn", "LastUpdatedOn", "Name" },
-                values: new object[] { "f420f3fe-95d8-48cf-9c6e-78c0d0249df3", (byte)32, "PRD002", new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5482), null, "Dream 125" });
+                values: new object[] { "80e87162-07bd-4fa2-91d7-ac2cf6761da8", (byte)32, "PRD002", new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9525), null, "Dream 125" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pricings_ProductId",
-                table: "Pricings",
+                name: "IX_Pricing_ProductId",
+                table: "Pricing",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -77,7 +77,7 @@ namespace ProductAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Pricings");
+                name: "Pricing");
 
             migrationBuilder.DropTable(
                 name: "Products");

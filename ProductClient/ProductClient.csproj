@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MenuLib" Version="1.0.0" />
+    <PackageReference Include="MenuLib" Version="1.0.1" />
     <PackageReference Include="RestClientLib" Version="1.0.0" />
   </ItemGroup>
 
