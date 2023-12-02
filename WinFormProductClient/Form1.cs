@@ -13,6 +13,7 @@ namespace WinFormProductClient
             cboUpdateCat.DataSource = Enum.GetValues<Category>();
             bs.DataSource = new List<ProductResponse>();
             dgvProducts.DataSource = bs;
+            dgvProducts.Columns["Price"].DisplayIndex = dgvProducts.Columns.Count - 1;
             dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
             btnRefresh.Click += DoClickRefresh;
@@ -26,6 +27,13 @@ namespace WinFormProductClient
             btnDelete.Click += DoClickDelete;
 
             btnCreateClear.Click += DoClickCreateClear;
+
+            btnPricings.Click += DoClickPricings;
+        }
+
+        private void DoClickPricings(object? sender, EventArgs e)
+        {
+            (new Form2(txtUpdateCode.Text)).ShowDialog();
         }
 
         private void DoClickCreateClear(object? sender, EventArgs e)
@@ -59,11 +67,51 @@ namespace WinFormProductClient
                 Name = txtUpdateName.Text,
                 Category = cat == Category.None ? null : cat.ToString()
             };
+            var cursor = this.Cursor;
+            this.Cursor = Cursors.WaitCursor;
             var result = await Program.RestClient.PutAsync<ProductUpdateReq, Result<string?>>(endpoint, req);
             Task task = Task.Run(async () =>
             {
                 if (result!.Succeded)
                 {
+                    if (double.TryParse(txtUpdatePrice.Text, out double price))
+                    {
+                        endpoint = "api/pricings";
+                        //get all pricings
+                        var allPricingsResult = await Program.RestClient.GetAsync<Result<List<PricingResponse>>>(endpoint);
+                        PricingResponse? curPricingResponse = null;
+                        if (allPricingsResult!.Succeded)
+                        {
+                            var allPricings = allPricingsResult.Data ?? new();
+                            curPricingResponse = allPricings.Where(p => (p.ProductCode == req.Key) && ((p.EffectedFrom ?? DateTime.MinValue) <= DateTime.Now))
+                                                            .OrderBy(p => p.EffectedFrom)
+                                                            .LastOrDefault();
+                        }
+                        if (curPricingResponse == null)
+                        {
+                            var pricingReq = new PricingCreateReq()
+                            {
+                                ProductKey = req.Key,
+                                EffectedFrom = DateTime.Now,
+                                Value = price
+                            };
+                            var pricingResult = await Program.RestClient.PostAsync<PricingCreateReq, Result<string?>>(endpoint, pricingReq);
+                        }
+                        else
+                        {
+                            var pricingReq = new PricingUpdateReq()
+                            {
+                                Id = curPricingResponse!.Id ?? "",
+                                ProductKey = result!.Data!,
+                                Value = price
+                            };
+                            var pricingResult = await Program.RestClient.PutAsync<PricingUpdateReq, Result<string?>>(endpoint, pricingReq);
+                        }
+
+
+
+                    }
+
                     endpoint = $"api/Products/{result!.Data!}";
                     var foundResult = await Program.RestClient.GetAsync<Result<ProductResponse?>>(endpoint);
                     if (foundResult!.Succeded && foundResult.Data != null)
@@ -73,11 +121,13 @@ namespace WinFormProductClient
                         {
                             found.Name = foundResult.Data.Name;
                             found.Category = foundResult.Data.Category;
+                            found.Price = foundResult.Data.Price;
                             bs.ResetBindings(false);
                         }
                     }
                 }
             });
+            this.Cursor = cursor;
             MessageBox.Show(result!.Message);
             task.Wait();
         }
@@ -99,6 +149,7 @@ namespace WinFormProductClient
                     Category cat = Category.None;
                     Enum.TryParse<Category>(prd.Category ?? "", out cat);
                     cboUpdateCat.SelectedItem = cat;
+                    txtUpdatePrice.Text = prd.Price?.ToString();
                 }
             }
         }
@@ -113,11 +164,25 @@ namespace WinFormProductClient
                 Name = txtCreateName.Text,
                 Category = cat == Category.None ? null : cat.ToString()
             };
+            var cursor = this.Cursor;
+            this.Cursor = Cursors.WaitCursor;
             var result = await Program.RestClient.PostAsync<ProductCreateReq, Result<string?>>(endpoint, req);
+
             Task task = Task.Run(async () =>
             {
                 if (result!.Succeded)
                 {
+                    if (double.TryParse(txtCreatePrice.Text, out double price))
+                    {
+                        var pricingReq = new PricingCreateReq()
+                        {
+                            ProductKey = req.Code,
+                            Value = price,
+                            EffectedFrom = DateTime.Now,
+                        };
+                        endpoint = "api/pricings";
+                        var pricingResult = await Program.RestClient.PostAsync<PricingCreateReq, Result<string?>>(endpoint, pricingReq);
+                    }
                     endpoint = $"api/Products/{result!.Data}";
                     var foundResult = await Program.RestClient.GetAsync<Result<ProductResponse?>>(endpoint);
                     if (foundResult!.Succeded && foundResult.Data != null)
@@ -127,7 +192,9 @@ namespace WinFormProductClient
                     }
                 }
             });
+            this.Cursor = cursor;
             MessageBox.Show(result!.Message);
+            task.Wait();
         }
 
         private async void DoClickRefresh(object? sender, EventArgs e)

@@ -9,20 +9,20 @@ public static class ProductHelper
 
     public static MenuBank MenuBank { get; set; } = new MenuBank()
     {
-        Title = "Product",
+        Title = "Products",
         Menus = new List<Menu>()
         {
             new Menu(){ Text= "Viewing", Action=ViewingProducts},
             new Menu(){ Text= "Creating", Action=CreatingProducts},
             new Menu(){ Text= "Updating", Action=UpdatingProducts},
             new Menu(){ Text= "Deleting", Action=DeletingProducts},
-            new Menu(){ Text= "Exiting", Action = ExitingProgram}
+            new Menu(){ Text= "Returning", Action = ReturningBack}
         }
     };
-    public static void ExitingProgram()
+    public static void ReturningBack()
         {
-            Console.WriteLine("\n[Exiting Program]");
-            Environment.Exit(0);
+            Console.WriteLine("\n[Returning Back]");
+            MenuBank.LoopBreak = true;
         }
     private static void DeletingProducts()
     {
@@ -154,11 +154,11 @@ public static class ProductHelper
             Console.WriteLine($"Products: {count}");
             if (count == 0) return;
 
-            Console.WriteLine($"{"Id",-36} {"Code",-10} {"Name",-30} {"Category",-20}");
-            Console.WriteLine(new string('=', 36 + 1 + 10 + 1 + 30 + 1 + 20));
+            Console.WriteLine($"{"Id",-36} {"Code",-10} {"Name",-30} {"Category",-20} {"Price", -5}");
+            Console.WriteLine(new string('=', 36 + 1 + 10 + 1 + 30 + 1 + 20 + 1 + 5));
             foreach (var prd in all)
             {
-                Console.WriteLine($"{prd.Id,-36} {prd.Code,-10} {prd.Name,-30} {prd.Category,-20}");
+                Console.WriteLine($"{prd.Id,-36} {prd.Code,-10} {prd.Name,-30} {prd.Category,-20} {prd.Price, 5}");
             }
         }).Wait();
     }

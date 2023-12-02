@@ -7,14 +7,7 @@ namespace ProductApi;
 
 public class SqlDbContext : DbContext, IDbContext
 {
-    public SqlDbContext(DbContextOptions<SqlDbContext> options) : base(options)
-    {
-        Products = Set<Product>();
-        Pricings = Set<Pricing>();
-    }
-
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Pricing> Pricings { get; set; }
+    public SqlDbContext(DbContextOptions<SqlDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

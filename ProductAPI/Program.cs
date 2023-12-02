@@ -41,6 +41,9 @@ void MapProductEndpoints(WebApplication app, string tag)
         => { return service.SetActingDate(actingDate).Read(key); }).WithTags(tag);
     app.MapPost("api/products", (IProductService service, ProductCreateReq req) 
         => { return service.Create(req); }).WithTags(tag);
+    app.MapPost("api/products/batch",
+                ([FromServices] IProductService service, List<ProductCreateReq> reqs) =>
+                { return service.CreateRange(reqs); }).WithTags(tag);
     app.MapPut("api/products", (IProductService service, ProductUpdateReq req) 
         => { return service.Update(req); }).WithTags(tag);
     app.MapDelete("api/products/{key}", (IProductService service, string key) 

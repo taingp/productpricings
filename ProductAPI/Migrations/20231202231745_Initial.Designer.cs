@@ -12,8 +12,8 @@ using ProductApi;
 namespace ProductAPI.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20231128141819_Init")]
-    partial class Init
+    [Migration("20231202231745_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,7 +49,7 @@ namespace ProductAPI.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Pricings");
+                    b.ToTable("Pricing");
                 });
 
             modelBuilder.Entity("ProductLib.Product", b =>
@@ -95,26 +95,26 @@ namespace ProductAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "777ae460-4890-4d5c-a86f-0acb0c4c25bb",
+                            Id = "48304f9d-31f1-42de-a995-8c221e23e19f",
                             Category = (byte)1,
                             Code = "PRD001",
-                            CreatedOn = new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5460),
+                            CreatedOn = new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9389),
                             Name = "Coca"
                         },
                         new
                         {
-                            Id = "f420f3fe-95d8-48cf-9c6e-78c0d0249df3",
+                            Id = "80e87162-07bd-4fa2-91d7-ac2cf6761da8",
                             Category = (byte)32,
                             Code = "PRD002",
-                            CreatedOn = new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5482),
+                            CreatedOn = new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9525),
                             Name = "Dream 125"
                         },
                         new
                         {
-                            Id = "0ed9b79a-6323-454c-aa77-d5d972f542ea",
+                            Id = "4e6a9f5c-5993-4886-9954-b957ecc0a420",
                             Category = (byte)4,
                             Code = "PRD003",
-                            CreatedOn = new DateTime(2023, 11, 28, 21, 18, 19, 650, DateTimeKind.Local).AddTicks(5489),
+                            CreatedOn = new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9531),
                             Name = "TShirt-SEA game 2023"
                         });
                 });
