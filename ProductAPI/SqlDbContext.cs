@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProductLib;
 using ProductLib.Extensions;
+using System.Reflection.Emit;
 
 namespace ProductApi;
 
@@ -12,32 +13,63 @@ public class SqlDbContext : DbContext, IDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProductEntityTypeConfig());
-        SeedProductData(modelBuilder.Entity<Product>());
+        modelBuilder.ApplyConfiguration(new PricingEntityTypeConfig());
+        SeedData(modelBuilder);
     }
 
-    private void SeedProductData(EntityTypeBuilder<Product> entityTypeBuilder)
+    private void SeedData(ModelBuilder modelBuilder)
     {
-        var reqs = new List<ProductCreateReq>()
+        var prdReqs = new List<ProductCreateReq>()
         {
             new()
             {
                 Code = "PRD001",
                 Name = "Coca",
-                Category= "Food"
+                Category= "Food",
             },
             new()
             {
                 Code = "PRD002",
                 Name = "Dream 125",
-                Category= "Vehicle"
+                Category= "Vehicle",
             },
             new()
             {
                 Code = "PRD003",
                 Name = "TShirt-SEA game 2023",
-                Category= "Cloth"
+                Category= "Cloth",
             }
         };
-        entityTypeBuilder.HasData(reqs.Select(x => x.ToEntity()));
+        var prdEntities = prdReqs.Select(x => x.ToEntity()).ToList();
+        modelBuilder.Entity<Product>().HasData(prdEntities);
+ 
+        DateTime? effectedDate = DateTime.Now;
+        var pricingReqs = new List<PricingCreateReq>()
+        {
+            new()
+            {
+                EffectedFrom = effectedDate,
+                Value = 8.5,
+            },
+            new()
+            {
+                EffectedFrom = effectedDate,
+                Value = 2350.0,
+            },
+            new()
+            {
+                EffectedFrom = effectedDate,
+                Value = 5.0,
+
+            }
+        };
+        var pricingEntities = pricingReqs.Select(x => x.ToEntity()).ToList();
+        
+        int MaxElements = Math.Max(prdEntities.Count(), pricingEntities.Count());
+        for (int index = 0; index < MaxElements; index++)
+        {
+            pricingEntities[index].ProductId = prdEntities[index].Id;
+        }
+        modelBuilder.Entity<Pricing>().HasData(pricingEntities);
     }
 }

@@ -12,9 +12,11 @@ namespace WinFormProductClient
             cboCreateCat.DataSource = Enum.GetValues<Category>();
             cboUpdateCat.DataSource = Enum.GetValues<Category>();
             bs.DataSource = new List<ProductResponse>();
-            dgvProducts.DataSource = bs;
-            dgvProducts.Columns["Price"].DisplayIndex = dgvProducts.Columns.Count - 1;
             dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvProducts.DataSource = bs;
+            dgvProducts.AutoGenerateColumns = false;
+            dgvProducts.Columns["Price"].DisplayIndex = dgvProducts.Columns.Count - 1;
+            
 
             btnRefresh.Click += DoClickRefresh;
 
@@ -47,14 +49,32 @@ namespace WinFormProductClient
         {
             if (bs.Current == null) return;
             if (bs.Current is not ProductResponse prd) return;
-            string endpoint = $"api/products/{prd.Id}";
-            var result = await Program.RestClient.DeleteAsync<Result<string?>>(endpoint);
-            if (result!.Succeded && prd.Id == result!.Data)
+            if (MessageBox.Show($"Are you sure to delete the product with code,{prd.Code}?",
+                                 "Deleting",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Question) == DialogResult.No) return;
+            if (chkInc.Checked)//for force removal
             {
-                bs.RemoveCurrent();
-                bs.ResetBindings(false);
+                var endpoint = $"api/products/force/{prd.Id}";
+                var result = await Program.RestClient.DeleteAsync<Result<int>>(endpoint);
+                if (result!.Succeded && result!.Data>0)
+                {
+                    bs.RemoveCurrent();
+                    bs.ResetBindings(false);
+                }
+                MessageBox.Show(result!.Message);
             }
-            MessageBox.Show(result!.Message);
+            else
+            {
+                var endpoint = $"api/products/{prd.Id}";
+                var result = await Program.RestClient.DeleteAsync<Result<string?>>(endpoint);
+                if (result!.Succeded && prd.Id == result!.Data)
+                {
+                    bs.RemoveCurrent();
+                    bs.ResetBindings(false);
+                }
+                MessageBox.Show(result!.Message);
+            }
         }
 
         private async void DoClickUpdateSubmit(object? sender, EventArgs e)
@@ -107,9 +127,6 @@ namespace WinFormProductClient
                             };
                             var pricingResult = await Program.RestClient.PutAsync<PricingUpdateReq, Result<string?>>(endpoint, pricingReq);
                         }
-
-
-
                     }
 
                     endpoint = $"api/Products/{result!.Data!}";
