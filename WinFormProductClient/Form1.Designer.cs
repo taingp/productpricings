@@ -42,6 +42,7 @@
             txtCreateCode = new TextBox();
             label1 = new Label();
             groupBox2 = new GroupBox();
+            btnPricings = new Button();
             txtUpdatePrice = new TextBox();
             label8 = new Label();
             cboUpdateCat = new ComboBox();
@@ -52,7 +53,7 @@
             label6 = new Label();
             btnUpdateSubmit = new Button();
             btnDelete = new Button();
-            btnPricings = new Button();
+            chkInc = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -203,6 +204,15 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "Updating Products";
             // 
+            // btnPricings
+            // 
+            btnPricings.Location = new Point(187, 159);
+            btnPricings.Name = "btnPricings";
+            btnPricings.Size = new Size(94, 29);
+            btnPricings.TabIndex = 16;
+            btnPricings.Text = "Pricings";
+            btnPricings.UseVisualStyleBackColor = true;
+            // 
             // txtUpdatePrice
             // 
             txtUpdatePrice.Location = new Point(64, 161);
@@ -289,20 +299,22 @@
             btnDelete.Text = "Delete";
             btnDelete.UseVisualStyleBackColor = true;
             // 
-            // btnPricings
+            // chkInc
             // 
-            btnPricings.Location = new Point(187, 159);
-            btnPricings.Name = "btnPricings";
-            btnPricings.Size = new Size(94, 29);
-            btnPricings.TabIndex = 16;
-            btnPricings.Text = "Pricings";
-            btnPricings.UseVisualStyleBackColor = true;
+            chkInc.AutoSize = true;
+            chkInc.Location = new Point(572, 556);
+            chkInc.Name = "chkInc";
+            chkInc.Size = new Size(125, 24);
+            chkInc.TabIndex = 5;
+            chkInc.Text = "Price Inclusion";
+            chkInc.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1145, 601);
+            Controls.Add(chkInc);
             Controls.Add(btnDelete);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -316,6 +328,7 @@
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -345,5 +358,6 @@
         private TextBox txtUpdatePrice;
         private Label label8;
         private Button btnPricings;
+        private CheckBox chkInc;
     }
 }

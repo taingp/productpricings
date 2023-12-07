@@ -19,11 +19,22 @@ namespace ProductLib.Extensions
                 Price = prd.Pricings!.OrderBy(p=>p.EffectedFrom)?.LastOrDefault()?.Value
             };
         }
+        public static ProductPricingResponse ToPricingsResponse(this Product prd)
+        {
+            return new ProductPricingResponse()
+            {
+                Id = prd.Id,
+                Code = prd.Code,
+                Name = prd.Name,
+                Category = Enum.GetName<Category>(prd.Category),
+                Pricings = prd.Pricings?.Select(p => p.ToResponse()).ToList()
+            };
+        }
         public static Product ToEntity(this ProductCreateReq req)
         {
             var category = Category.None;
             Category.TryParse(req.Category, out category);
-            return new Product()
+            var entity = new Product()
             {
                 Id = Guid.NewGuid().ToString(),
                 Code = req.Code,
@@ -32,6 +43,15 @@ namespace ProductLib.Extensions
                 CreatedOn = DateTime.Now,
                 LastUpdatedOn = null
             };
+            var pricingReqs = req.Pricings?.Select(p => new PricingCreateReq()
+            {
+                ProductKey = entity.Id,
+                Value = p.Value,
+                EffectedFrom = p.EffectedFrom
+            }).ToList();
+            entity.Pricings = pricingReqs?.Select(p => p.ToEntity()).ToList();
+            entity.Pricings?.ForEach(p => p.Product = entity);
+            return entity;
         }
         public static void Copy(this Product prd, ProductUpdateReq req)
         {

@@ -12,7 +12,7 @@ using ProductApi;
 namespace ProductAPI.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20231202231745_Initial")]
+    [Migration("20231203034652_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,29 +27,62 @@ namespace ProductAPI.Migrations
             modelBuilder.Entity("ProductLib.Pricing", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(36)")
+                        .HasColumnName("Id");
 
                     b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedOn");
 
                     b.Property<DateTime>("EffectedFrom")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime")
+                        .HasColumnName("EffectedFrom");
 
                     b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime")
+                        .HasColumnName("LastUpdatedOn");
 
                     b.Property<string>("ProductId")
                         .IsRequired()
                         .HasColumnType("varchar(36)");
 
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,5)")
+                        .HasColumnName("Value");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Pricing");
+                    b.ToTable("Pricings", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "17aacbe9-3008-4fb9-a66a-cbce91db79dd",
+                            CreatedOn = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2071),
+                            EffectedFrom = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2056),
+                            ProductId = "41eb3bb0-1748-4f08-9ab3-4095456e3443",
+                            Value = 8.5m
+                        },
+                        new
+                        {
+                            Id = "9c04f7ae-cf7b-4c72-ab95-01b684db8262",
+                            CreatedOn = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2078),
+                            EffectedFrom = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2056),
+                            ProductId = "d302a420-a014-48ed-bfa6-42307e6b8e96",
+                            Value = 2350m
+                        },
+                        new
+                        {
+                            Id = "e820be79-3f45-4b8c-803f-d7478a887f8a",
+                            CreatedOn = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2081),
+                            EffectedFrom = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2056),
+                            ProductId = "54244d5f-ccb0-478f-a739-906e451a3f39",
+                            Value = 5m
+                        });
                 });
 
             modelBuilder.Entity("ProductLib.Product", b =>
@@ -95,26 +128,26 @@ namespace ProductAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "48304f9d-31f1-42de-a995-8c221e23e19f",
+                            Id = "41eb3bb0-1748-4f08-9ab3-4095456e3443",
                             Category = (byte)1,
                             Code = "PRD001",
-                            CreatedOn = new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9389),
+                            CreatedOn = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(1999),
                             Name = "Coca"
                         },
                         new
                         {
-                            Id = "80e87162-07bd-4fa2-91d7-ac2cf6761da8",
+                            Id = "d302a420-a014-48ed-bfa6-42307e6b8e96",
                             Category = (byte)32,
                             Code = "PRD002",
-                            CreatedOn = new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9525),
+                            CreatedOn = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2019),
                             Name = "Dream 125"
                         },
                         new
                         {
-                            Id = "4e6a9f5c-5993-4886-9954-b957ecc0a420",
+                            Id = "54244d5f-ccb0-478f-a739-906e451a3f39",
                             Category = (byte)4,
                             Code = "PRD003",
-                            CreatedOn = new DateTime(2023, 12, 3, 6, 17, 45, 498, DateTimeKind.Local).AddTicks(9531),
+                            CreatedOn = new DateTime(2023, 12, 3, 10, 46, 52, 624, DateTimeKind.Local).AddTicks(2024),
                             Name = "TShirt-SEA game 2023"
                         });
                 });
@@ -124,7 +157,7 @@ namespace ProductAPI.Migrations
                     b.HasOne("ProductLib.Product", "Product")
                         .WithMany("Pricings")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");
